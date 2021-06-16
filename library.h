@@ -6,6 +6,7 @@
 #define AFD_PROYECT_LIBRARY_H
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 #endif //AFD_PROYECT_LIBRARY_H

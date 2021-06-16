@@ -7,6 +7,7 @@
 #include "library.h"
 
 struct state{
+    string name;
     state* zero;
     state* one;
 };
