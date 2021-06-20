@@ -19,12 +19,13 @@ void run(){
     }
     AFD afd(n, ind_inicial, n_final, f_states);
     int qini;
-    int cont;
+    int caracter;
     int qfin;
     for (int i=0; i<2*n; i++){
-        cin >> qini >> cont >> qfin;
-        afd.crear_conecction(qini, cont, qfin);
+        cin >> qini >> caracter >> qfin;
+        afd.crear_conecction(qini, caracter, qfin);
     }
+    afd.crear_automaton();
 }
 
 #endif //AFD_PROYECT_RUN_H

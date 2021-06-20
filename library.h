@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
 using namespace std;
 
 #endif //AFD_PROYECT_LIBRARY_H
