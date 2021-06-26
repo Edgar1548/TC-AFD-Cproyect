@@ -16,7 +16,7 @@ private:
 public:
     AFD(int n, int ind_inicial, int n_final, int* f_array);
     void crear_conecction(int base,int conection,int final);
-    void crear_automaton();
+    bool crear_automaton() const;
 };
 
 

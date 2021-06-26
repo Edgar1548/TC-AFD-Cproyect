@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <unordered_map>
 using namespace std;
 
 #endif //AFD_PROYECT_LIBRARY_H
