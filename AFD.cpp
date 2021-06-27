@@ -58,6 +58,7 @@ void AFD::crear_conecction(int base, int conection, int final) {
     return false;
 
 }*/
+/*
 string AFD::hallar_0(vector<int> STR){
     priority_queue<int> pq;
     string cadena;
@@ -73,30 +74,119 @@ string AFD::hallar_0(vector<int> STR){
     }
     return cadena;
 }
-string hallar_1(string STR){
-
+string AFD::hallar_1(vector<int> STR){
+    priority_queue<int> pq;
+    string cadena;
+    unordered_map<int, bool> map;
+    for (int i : STR){
+        int it = array[i]->zero->position;
+        if (map.find(it)==map.end())
+            pq.push(it);
+    }
+    while (!pq.empty()){
+        cadena += to_string(pq.top());
+        pq.pop();
+    }
+    return cadena;
+}
+ */
+vector<int> AFD::hallar_0(vector<int> STR){
+    priority_queue<int,vector<int>, std::greater<int>> pq;
+    string cadena;
+    unordered_map<int, bool> map;
+    for (int i : STR){
+        int it = array[i]->zero->position;
+        if (map.find(it)==map.end()){
+            map[it] = true;
+            pq.push(it);
+        }
+    }
+    vector<int> vec;
+    while (!pq.empty()){
+        vec.push_back(pq.top());
+        pq.pop();
+    }
+    return vec;
 }
 
-bool MINSINC(string STA){
-    queue<pair<string,int>> que;
+vector<int> AFD::hallar_1(vector<int> STR){
+    priority_queue<int,vector<int>, std::greater<int>> pq;
+    unordered_map<int, bool> map;
+    for (int i : STR){
+        int it = array[i]->one->position;
+        if (map.find(it)==map.end()){
+            map[it] = true;
+            pq.push(it);
+        }
+    }
+    vector<int> vec;
+    while (!pq.empty()){
+        vec.push_back(pq.top());
+        pq.pop();
+    }
+    return vec;
+}
+string convert_string(vector<int> vec){
+    string cadena_aux;
+    for (int i:vec)
+        cadena_aux += to_string(i);
+    return cadena_aux;
+}
+void AFD::MIN() {
+    string cadena;
+    vector<int> vec;
+    vec.reserve(n_states);
+    for(int i=0; i<n_states; i++){
+        vec.push_back(array[i]->position);
+    }
+    if (MINSINC(vec, cadena)){
+        cout << "si es sincronizable"<<endl;
+        cout << "tamanio_cadena: " << cadena.size()<<endl;
+        cout << "cadena: " << cadena<<endl;
+    }
+    else cout << "NO";
+}
+bool AFD::MINSINC(vector<int> STA, string &cadena){
+    string cadena_aux;
+    vector<int> state_a;
+    vector<int> state_b;
+    queue<vector<int>> que;
     unordered_map<string, bool> map2;
     unordered_map<string, pair<string, int>> map;
-    que.push({STA,1});
+    que.push(STA);
     while (!que.empty()){
-        string state_a = hallar_0();
-        string state_b = hallar_1();
-        if (state_a.size()==1 || state_b.size()==1)
-            break;
-        map2[STA]=true;
-        if(!map2[state_a])  que.push({state_a, 1});
-        if(!map2[state_b]) que.push({state_b, 0});
+        cadena_aux = "";
+        if (STA.size()==1) break;
+        state_a = hallar_0(STA);
+        state_b = hallar_1(STA);
+        cadena_aux = convert_string(STA);
+        map2[cadena_aux] = true;
+        cadena_aux = convert_string(state_a);
+        if(map2.find(cadena_aux) == map2.end()) {
+            map[cadena_aux] = {convert_string(STA),0};
+            map2[cadena_aux] = true;
+            que.push(state_a);
+        }
+        cadena_aux = convert_string(state_b);
+        if(map2.find(cadena_aux)==map2.end()) {
+            map[cadena_aux] = {convert_string(STA),1};
+            map2[cadena_aux] = true;
+            que.push(state_b);
+        }
         que.pop();
-        map[que.front().first] = {STA,que.front().second};
-        STA = que.front().first;
+        STA = que.front();
     }
-    string cadena;
-    while (map.find(STA)==map.end()){
-        cadena += to_string(map[STA].second);
-        STA = map[STA].first;
+    if (que.empty()) return false;
+    cadena_aux = convert_string(STA);
+    while (map.find(cadena_aux)!=map.end()){
+        cadena += to_string(map[cadena_aux].second);
+        cadena_aux = map[cadena_aux].first;
     }
+    auto it = cadena.end();
+    for(int i=0;i<cadena.size()/2;i++){
+        char first = cadena[i];
+        cadena[i] = *--it;
+        *it = first;
+    }
+    return true;
 }

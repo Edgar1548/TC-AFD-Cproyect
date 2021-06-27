@@ -25,7 +25,7 @@ void run(){
         cin >> qini >> caracter >> qfin;
         afd.crear_conecction(qini, caracter, qfin);
     }
-    afd.crear_automaton();
+    afd.MIN();
 }
 
 #endif //AFD_PROYECT_RUN_H

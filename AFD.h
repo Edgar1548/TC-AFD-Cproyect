@@ -17,9 +17,10 @@ public:
     AFD(int n, int ind_inicial, int n_final, int* f_array);
     void crear_conecction(int base,int conection,int final);
     bool crear_automaton() const;
-    string hallar_0(vector<int> STR);
-    string hallar_1(vector<int> STR);
-    bool MINSINC();
+    vector<int> hallar_0(vector<int> STR);
+    vector<int> hallar_1(vector<int> STR);
+    void MIN();
+    bool MINSINC(vector<int> STA, string &cadena);
 };
 
 
