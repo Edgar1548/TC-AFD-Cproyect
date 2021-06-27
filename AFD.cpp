@@ -128,17 +128,15 @@ vector<int> AFD::hallar_1(vector<int> STR){
 }
 string convert_string(vector<int> vec){
     string cadena_aux;
-    for (int i:vec)
-        cadena_aux += to_string(i);
+    for (int i:vec) cadena_aux += to_string(i);
     return cadena_aux;
 }
 void AFD::MIN() {
     string cadena;
     vector<int> vec;
     vec.reserve(n_states);
-    for(int i=0; i<n_states; i++){
+    for(int i=0; i<n_states; i++)
         vec.push_back(array[i]->position);
-    }
     if (MINSINC(vec, cadena)){
         cout << "si es sincronizable"<<endl;
         cout << "tamanio_cadena: " << cadena.size()<<endl;
@@ -146,7 +144,13 @@ void AFD::MIN() {
     }
     else cout << "NO";
 }
+
+
 bool AFD::MINSINC(vector<int> STA, string &cadena){
+    if (STA.size()==1){
+        cadena = to_string(0);
+        return true;
+    }
     string cadena_aux;
     vector<int> state_a;
     vector<int> state_b;
@@ -154,13 +158,8 @@ bool AFD::MINSINC(vector<int> STA, string &cadena){
     unordered_map<string, bool> map2;
     unordered_map<string, pair<string, int>> map;
     que.push(STA);
-    /*
-    if (STA.size()==1){
-        cadena = to_string(0);
-        return true;
-    }
-    */
     while (!que.empty()){
+        STA = que.front();
         cadena_aux = "";
         if (STA.size()==1) break;
         state_a = hallar_0(STA);
@@ -180,7 +179,6 @@ bool AFD::MINSINC(vector<int> STA, string &cadena){
             que.push(state_b);
         }
         que.pop();
-        STA = que.front();
     }
     if (que.empty()) return false;
     cadena_aux = convert_string(STA);
