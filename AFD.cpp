@@ -154,6 +154,12 @@ bool AFD::MINSINC(vector<int> STA, string &cadena){
     unordered_map<string, bool> map2;
     unordered_map<string, pair<string, int>> map;
     que.push(STA);
+    /*
+    if (STA.size()==1){
+        cadena = to_string(0);
+        return true;
+    }
+    */
     while (!que.empty()){
         cadena_aux = "";
         if (STA.size()==1) break;
