@@ -15,7 +15,7 @@ void run(){
 
     do{
         cin >> n >> ind_inicial >> n_final;
-    }while(n < ind_inicial || n < n_final || n<=0)
+    }while(n < ind_inicial || n < n_final || n<=0);
     
     f_states = new int[n_final];
     for (int i=0;i<n_final;i++){
@@ -28,7 +28,7 @@ void run(){
     for (int i=0; i<2*n; i++){
         do{
             cin >> qini >> caracter >> qfin;
-            }while(caracter!=1 and caracter!=0)
+            }while(caracter!=1 and caracter!=0);
         
         afd.crear_conecction(qini, caracter, qfin);
     }
