@@ -45,6 +45,7 @@ void run(){
         }
         if(stat==1 and stat2==1){
             afd.MIN();
+            return;
         }
     }
     else{
