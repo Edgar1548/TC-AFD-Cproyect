@@ -19,11 +19,8 @@ void AFD::crear_conecction(int base, int conection, int final) {
     else if (conection==1) array[base]->one = array[final];
     else cout << "Alphabet is only 0 or 1";
 }
-
 /*bool AFD::crear_automaton() const {
-
     state** automaton;
-
     int power_size = int(pow(2, n_states));
     automaton = new state*[power_size];
     int aux = 0;
@@ -45,113 +42,75 @@ void AFD::crear_conecction(int base, int conection, int final) {
                     map_one[array[j]]=true;
                     automaton[i]->states_one.push_back(array[j]->one);
                 }
-
             }
         }
     }
-    for (int i=0; i<power_size; i++){
-        cout << automaton[i]->name << endl;
-    }
-
-
-
     return false;
-
 }*/
-/*
-string AFD::hallar_0(vector<int> STR){
-    priority_queue<int> pq;
-    string cadena;
-    unordered_map<int, bool> map;
-    for (int i : STR){
-        int it = array[i]->zero->position;
-        if (map.find(it)==map.end())
-            pq.push(it);
-    }
-    while (!pq.empty()){
-        cadena += to_string(pq.top());
-        pq.pop();
-    }
-    return cadena;
-}
-string AFD::hallar_1(vector<int> STR){
-    priority_queue<int> pq;
-    string cadena;
-    unordered_map<int, bool> map;
-    for (int i : STR){
-        int it = array[i]->zero->position;
-        if (map.find(it)==map.end())
-            pq.push(it);
-    }
-    while (!pq.empty()){
-        cadena += to_string(pq.top());
-        pq.pop();
-    }
-    return cadena;
-}
- */
 pair<vector<int>, string> AFD::hallar_0(pair<vector<int>, string> STR){
-    priority_queue<int> pq;
-    string cadena;
-    vector<int> vec;
-    unordered_map<int, bool> map;
-    for (int i : STR.first){
+    priority_queue<int> pq; // Para guardarlo de forma ordenada (en este caso sera de mayor a menor)
+    string cadena; // Donde se guarda el nombre del estado al que el estado actual va con 0
+    vector<int> vec; // Para verificar que los estados no se repitan
+    unordered_map<int, bool> map; // Donde se guardara el vector del estado al que el estado actual va con 0
+    for (int i : STR.first){  // Recorremos el vector con el estado actual
         int it = array[i]->zero->position;
-        if (map.find(it)==map.end()){
-            map[it] = true;
+        if (map.find(it)==map.end()){ // Verificamos que no se repita
+            map[it] = true; // Actualizamos
             //vec.push_back(it);
             //cadena+= to_string(it);
-            pq.push(it);
+            pq.push(it); // Guardamos en el heap
         }
     }
 
-    while (!pq.empty()){
+    while (!pq.empty()){  // Pasamos del heap al vector (heapsort)
         vec.push_back(pq.top());
         cadena += to_string(pq.top());
         pq.pop();
     }
 
-    pair<vector<int>,string>pair_;
+    pair<vector<int>,string>pair_; // Guardamos en un pair
     pair_ = {vec, cadena};
     return pair_;
 }
 
 pair<vector<int>, string> AFD::hallar_1(pair<vector<int>, string> STR){
-    priority_queue<int> pq;
-    string cadena;
-    unordered_map<int, bool> map;
-    vector<int> vec;
-    for (int i : STR.first){
-        int it = array[i]->one->position;
-        if (map.find(it)==map.end()){
-            map[it] = true;
+    priority_queue<int> pq; // Para guardarlo de forma ordenada (en este caso sera de mayor a menor)
+    string name; // Donde se guarda el nombre del estado al que el estado actual va con 1
+    unordered_map<int, bool> map; // Para verificar que los estados no se repitan
+    vector<int> vec; // Donde se guardara el vector del estado al que el estado actual va con 1
+    for (int i : STR.first){ // Recorremos el vector con el estado actual
+        int it = array[i]->one->position; //
+        if (map.find(it)==map.end()){ // Verificamos que no se repita
+            map[it] = true; // Actualizamos
             //vec.push_back(it);
             //cadena+= to_string(it);
-            pq.push(it);
+            pq.push(it); // Guardamos en el heap
         }
     }
-    while (!pq.empty()){
+    while (!pq.empty()){ // pasamos del heap al vector (heapsort)
         vec.push_back(pq.top());
-        cadena += to_string(pq.top());
+        name += to_string(pq.top());
         pq.pop();
     }
-    pair<vector<int>,string>pair_;
-    pair_ = {vec, cadena};
+    pair<vector<int>,string>pair_; // Guardamos en un pair
+    pair_ = {vec, name};
     return pair_;
 }
 void AFD::MIN() {
-    string cadena;
-    string sup;
-    vector<int> vec;
-    pair<vector<int>,string> pair_;
-    vec.reserve(n_states);
-    for(int i=0; i<n_states; i++){
+    string cadena; // Cadena que se mostrara si es que se haya
+    string sup; // cadena que se guardara en el pair para pasarlo a la funcion MINSINC, representa al estado
+    // con todos los estados unitario
+    vector<int> vec; // vector que se guardara en el pair para pasarlo a la funcion MINSINC, , representa al estado
+    // con todos los estados unitario
+    vec.reserve(n_states); // Reservamos el tamaño del vec a n (todos los estados unitarios)
+    pair<vector<int>,string> pair_; // Representa al estado con todos los estados unitario
+    for(int i=0; i<n_states; i++){ //Recorremos el array con estados unitarios
         int tmp = array[i]->position;
         vec.push_back(tmp);
         sup += to_string(tmp);
     }
-    pair_ = {vec, sup};
-    if (MINSINC(pair_, cadena)){
+    pair_ = {vec, sup}; // Guardamos
+    if (MINSINC(pair_, cadena)){ // Si MINSINC retorna verdad es sincronizable, caso contrario no
         cout << "si es sincronizable"<<endl;
         cout << "tamanio_cadena: " << cadena.size()<<endl;
         cout << "cadena: " << cadena<<endl;
@@ -164,42 +123,43 @@ bool AFD::MINSINC(pair<vector<int>, string> STA, string &cadena){
     if (STA.first.size()==1){
         cadena = to_string(0);
         return true;
-    }
-    pair<vector<int>, string> state_0;
-    pair<vector<int>, string> state_1;
-    queue<pair<vector<int>, string>> que;
-    unordered_map<string, bool> map2;
-    unordered_map<string, pair<string, char>> map;
-    que.push(STA);
+    }//Si el tamaño de la cadena es 1,
+    pair<vector<int>, string> state_0; // Pair que guarda el estado al que se dirigue con 0
+    pair<vector<int>, string> state_1; // Pair que guarda el estado al que se dirigue con 1
+    queue<pair<vector<int>, string>> que; // Queue que guarda un vector y string, ambos representan el estado
+    unordered_map<string, bool> map2; // Verifica si el estado ya ha sido recorrido
+    unordered_map<string, pair<string, char>> map; // Guarda el padre del estado con la coneccion
+    que.push(STA); // Pusheamos un valor al queue
+    map2[STA.second] = true; //Actualizamos STA como recorrido
     while (!que.empty()){
-        STA = que.front();
-        if (STA.first.size()==1) break;
-        state_0 = hallar_0(STA);
-        state_1 = hallar_1(STA);
-        map2[STA.second] = true;
-        if(map2.find(state_0.second) == map2.end()) {
-            map[state_0.second] = {STA.second,'0'};
-            map2[state_0.second] = true;
-            que.push(state_0);
+        STA = que.front(); // Actualiza el estado
+        if (STA.first.size()==1) break; // Si el estado es de tamaño 1, es unitario, y se rompe el while
+        state_0 = hallar_0(STA); // Funcion para hallar el camino por 0
+        state_1 = hallar_1(STA); // Funcion para hallar el camino por 1
+        if(map2.find(state_0.second) == map2.end()) { //Verifica que el camino por 0 no haya sido recorrido
+            map[state_0.second] = {STA.second,'0'}; //Guardamos el Padre de state_0  y el camino '0'
+            map2[state_0.second] = true; //state_0 sera recorrido
+            que.push(state_0); // Pusheamos al queue el state_0
         }
         if(map2.find(state_1.second)==map2.end()) {
-            map[state_1.second] = {STA.second,'1'};
-            map2[state_1.second] = true;
-            que.push(state_1);
+            map[state_1.second] = {STA.second,'1'}; //Guardamos el Padre de state_1  y el camino '1'
+            map2[state_1.second] = true; //state_0 sera recorrido
+            que.push(state_1); // Pusheamos al queue el state_0
         }
-        que.pop();
+        que.pop(); // Hacemos pop del front del queue
     }
-    if (que.empty()) return false;
-    while (map.find(STA.second)!=map.end()){
-        cadena += map[STA.second].second;
-        STA.second = map[STA.second].first;
-         }
-    auto it = cadena.end();
+    if (que.empty()) return false; // Si es vacio el queue, habra recorrido el automata potencia
+    // y no encontro ningun camino a un automata unitario
+    while (map.find(STA.second)!=map.end()){ //Recorremos desde el automata unitario hasta el automata con todos los estados unitario
+        cadena += map[STA.second].second; // Le sumamos a cadena la coneccion (simbolo del alfabeto)
+        STA.second = map[STA.second].first; //  Actualizamos el STA
+    }
+    auto it = cadena.end(); // Usamos iteradores para recorrer el string
     for(int i=0;i<cadena.size()/2;i++){
         char first = cadena[i];
         cadena[i] = *--it;
         *it = first;
-    }
+    }// Recorremos el string a la inversa
 
     return true;
 }

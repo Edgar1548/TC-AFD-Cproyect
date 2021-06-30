@@ -33,17 +33,16 @@ void run(){
             cin >> qini >> caracter >> qfin;
             if(caracter!=1 and caracter!=0){
                 stat2*=0;
-
                 cout<<endl<<"error en la linea: "<<i+1<<endl;
             }
-            if(stat2==1){
+            else if(stat2==1){
                 afd.crear_conecction(qini, caracter, qfin);
             }
             else{
                 break;
             }
         }
-        if(stat==1 and stat2==1){
+        if(stat2==1){
             afd.MIN();
             return;
         }
