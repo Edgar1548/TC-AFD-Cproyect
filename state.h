@@ -7,12 +7,9 @@
 #include "library.h"
 
 struct state{
-    int position;
-    vector<state*> states;
-    vector<state*> states_zero;
-    vector<state*> states_one;
-    state* zero;
-    state* one;
+    int position; // Posicion del automata en el array
+    state* zero; // Automata al que va con cero
+    state* one;  // Automata al que va con uno
 };
 
 

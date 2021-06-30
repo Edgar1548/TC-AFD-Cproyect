@@ -2,7 +2,7 @@
 // Created by EDGAR on 10/06/2021.
 //
 #include "AFD.h"
-AFD::AFD(int n, int ind_inicial, int n_final, int *f_array) {
+AFD::AFD(int n, int ind_inicial, int n_final, int *f_array) { // Guarda los atributos del AFD
     array = new state*[n];
     a_final = new int[n_final];
     for (int i=0; i<n; i++){
@@ -14,8 +14,8 @@ AFD::AFD(int n, int ind_inicial, int n_final, int *f_array) {
     n_states = n;
 }
 
-void AFD::crear_conecction(int base, int conection, int final) {
-    if (conection == 0) array[base]->zero = array[final];
+void AFD::crear_conecction(int base, int conection, int final) { // Crea conexiones
+    if (conection == 0) array[base]->zero = array[final]; //
     else if (conection==1) array[base]->one = array[final];
     else cout << "Alphabet is only 0 or 1";
 }
@@ -126,9 +126,9 @@ bool AFD::MINSINC(pair<vector<int>, string> STA, string &cadena){
     }//Si el tamaño de la cadena es 1,
     pair<vector<int>, string> state_0; // Pair que guarda el estado al que se dirigue con 0
     pair<vector<int>, string> state_1; // Pair que guarda el estado al que se dirigue con 1
-    queue<pair<vector<int>, string>> que; // Queue que guarda un vector y string, ambos representan el estado
+    queue<pair<vector<int>, string>> que; // Queue que guarda un vector y string, ambos representan un estado
     unordered_map<string, bool> map2; // Verifica si el estado ya ha sido recorrido
-    unordered_map<string, pair<string, char>> map; // Guarda el padre del estado con la coneccion
+    unordered_map<string, pair<string, char>> map; // Guarda el padre del estado con la conexion
     que.push(STA); // Pusheamos un valor al queue
     map2[STA.second] = true; //Actualizamos STA como recorrido
     while (!que.empty()){
