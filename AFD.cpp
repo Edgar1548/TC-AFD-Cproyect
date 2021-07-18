@@ -94,7 +94,7 @@ pair<vector<int>, string> AFD::hallar_1(pair<vector<int>, string> STR){
     pair_ = {vec, name};
     return pair_;
 }
-void AFD::MIN() {
+void AFD::help_MIN() {
     string cadena; // Cadena que se mostrara si es que se haya
     string sup; // cadena que se guardara en el pair para pasarlo a la funcion MINSINC, representa al estado
     // con todos los estados unitario
@@ -116,42 +116,42 @@ void AFD::MIN() {
     else cout << "NO";
 }
 
-bool AFD::MINSINC(pair<vector<int>, string> STA, string &cadena){
-    if (STA.first.size()==1){
+bool AFD::MINSINC(pair<vector<int>, string> actual, string &cadena){
+    if (actual.first.size() == 1){
         cadena = to_string(0);
         return true;
     } //Si el tamaño de la cadena es 1,
-    pair<vector<int>, string> state_0; // Pair que guarda el estado al que se dirigue con 0
-    pair<vector<int>, string> state_1; // Pair que guarda el estado al que se dirigue con 1
-    queue<pair<vector<int>, string>> que; // Queue que guarda un vector y string, ambos representan un estado
-    unordered_map<string, bool> map2; // Verifica si el estado ya ha sido recorrido
-    unordered_map<string, pair<string, char>> map; // Guarda el padre del estado con la conexion
-    que.push(STA); // Pusheamos un valor al queue
-    map2[STA.second] = true; //Actualizamos STA como recorrido
-    while (!que.empty()){
-        STA = que.front(); // Actualiza el estado
-        if (STA.first.size()==1) break; // Si el estado es de tamaño 1, es unitario, y se rompe el while
-        state_0 = hallar_0(STA); // Funcion para hallar el camino por 0
-        state_1 = hallar_1(STA); // Funcion para hallar el camino por 1
-        map2[STA.second] = true;
-        if(map2.find(state_0.second) == map2.end()) { //Verifica que el camino por 0 no haya sido recorrido
-            map[state_0.second] = {STA.second,'0'}; //Guardamos el Padre de state_0  y el camino '0'
-            map2[state_0.second] = true; //state_0 sera recorrido
-            que.push(state_0); // Pusheamos al queue el state_0
+    pair<vector<int>, string> state_0; // Pair state_que guarda el estado al state_que se dirigue con 0
+    pair<vector<int>, string> state_1; // Pair state_que guarda el estado al state_que se dirigue con 1
+    queue<pair<vector<int>, string>> state_que; // Queue state_que guarda un vector y string, ambos representan un estado
+    unordered_map<string, bool> visiteds_map; // Verifica si el estado ya ha sido recorrido
+    unordered_map<string, pair<string, char>> fathers_map; // Guarda el padre del estado con la conexion
+    state_que.push(actual); // Pusheamos un valor al queue
+    visiteds_map[actual.second] = true; //Actualizamos actual como recorrido
+    while (!state_que.empty()){
+        actual = state_que.front(); // Actualiza el estado
+        if (actual.first.size() == 1) break; // Si el estado es de tamaño 1, es unitario, y se rompe el while
+        state_0 = hallar_0(actual); // Funcion para hallar el camino por 0
+        state_1 = hallar_1(actual); // Funcion para hallar el camino por 1
+        visiteds_map[actual.second] = true;
+        if(visiteds_map.find(state_0.second) == visiteds_map.end()) { //Verifica state_que el camino por 0 no haya sido recorrido
+            fathers_map[state_0.second] = {actual.second, '0'}; //Guardamos el Padre de state_0  y el camino '0'
+            visiteds_map[state_0.second] = true; //state_0 sera recorrido
+            state_que.push(state_0); // Pusheamos al queue el state_0
         }
-        if(map2.find(state_1.second)==map2.end()) {
-            map[state_1.second] = {STA.second,'1'}; //Guardamos el Padre de state_1  y el camino '1'
-            map2[state_1.second] = true; //state_1 sera recorrido
-            que.push(state_1); // Pusheamos al queue el state_0
+        if(visiteds_map.find(state_1.second) == visiteds_map.end()) {
+            fathers_map[state_1.second] = {actual.second, '1'}; //Guardamos el Padre de state_1  y el camino '1'
+            visiteds_map[state_1.second] = true; //state_1 sera recorrido
+            state_que.push(state_1); // Pusheamos al queue el state_0
         }
-        que.pop(); // Hacemos pop del front del queue
+        state_que.pop(); // Hacemos pop del front del queue
     }
-    if (que.empty()) return false; // Si es vacio el queue, habra recorrido el automata potencia
+    if (state_que.empty()) return false; // Si es vacio el queue, habra recorrido el automata potencia
     // y no encontro ningun camino a un automata unitario
 
-    while (map.find(STA.second)!=map.end()){ //Recorremos desde el automata unitario hasta el automata con todos los estados unitario
-        cadena += map[STA.second].second; // Le sumamos a cadena la coneccion (simbolo del alfabeto)
-        STA.second = map[STA.second].first; //  Actualizamos el STA
+    while (fathers_map.find(actual.second) != fathers_map.end()){ //Recorremos desde el automata unitario hasta el automata con todos los estados unitario
+        cadena += fathers_map[actual.second].second; // Le sumamos a cadena la coneccion (simbolo del alfabeto)
+        actual.second = fathers_map[actual.second].first; //  Actualizamos el actual
     }
     auto it = cadena.end(); // Usamos iteradores para recorrer el string
     for(int i=0;i<cadena.size()/2;i++){
@@ -160,4 +160,45 @@ bool AFD::MINSINC(pair<vector<int>, string> STA, string &cadena){
         *it = first;
     }// Recorremos el string a la inversa
     return true;
+}
+bool AFD::DECSINC() {
+    if (n_states == 1 || n_states == 0) return true;
+    unordered_map<string, bool> trues_;
+    pair<vector<int>, string> pair_;
+    stack<pair<vector<int>, string>> stack_states;
+    int count = 0;
+    for (int i=0; i<n_states; i++){
+        for (int j=i+1; j<n_states; j++){
+            unordered_map<string, bool> visited;
+            pair_.first = {i, j};
+            pair_.second = to_string(j) + " " +to_string(i) + " ";
+            if (trues_[pair_.second]) continue;
+            stack_states.push(pair_);
+            while(!stack_states.empty()){
+                auto zero = hallar_0(pair_);
+                auto one = hallar_1(pair_);
+                visited[pair_.second] = true;
+                if (trues_[zero.second] || trues_[one.second] || zero.first.size() == 1 || one.first.size() == 1){
+                    while (!stack_states.empty()){
+                        count ++;
+                        trues_[stack_states.top().second] = true;
+                        stack_states.pop();
+                    }
+                    break;
+                }
+                else if (!visited[zero.second])stack_states.push(zero);
+                else if (!visited[one.second])stack_states.push(one);
+                else stack_states.pop();
+                if (stack_states.empty()) return false;
+                pair_ = stack_states.top();
+            }
+            if (count == (n_states*(n_states-1))/2) return true;
+        }
+    }
+    return true;
+}
+
+void AFD::help_DEC() {
+    if (DECSINC()) cout << "SI";
+    else cout << "NO";
 }
