@@ -40,8 +40,8 @@ void run(){
             else break;
         }
         if(stat2==1){
-            afd.help_DEC();
-            //afd.help_MIN();
+            afd.run_DEC();
+            //afd.run_MIN();
             return;
         }
     }

@@ -94,7 +94,7 @@ pair<vector<int>, string> AFD::hallar_1(pair<vector<int>, string> STR){
     pair_ = {vec, name};
     return pair_;
 }
-void AFD::help_MIN() {
+void AFD::run_MIN() {
     string cadena; // Cadena que se mostrara si es que se haya
     string sup; // cadena que se guardara en el pair para pasarlo a la funcion MINSINC, representa al estado
     // con todos los estados unitario
@@ -198,7 +198,10 @@ bool AFD::DECSINC() {
     return true;
 }
 
-void AFD::help_DEC() {
+void AFD::run_DEC() {
     if (DECSINC()) cout << "SI";
     else cout << "NO";
 }
+
+
+
