@@ -6,7 +6,6 @@
 #define AFD_PROYECT_RUN_H
 #include "AFD.h"
 
-
 void run(){
     int n;
     int ind_inicial;
@@ -23,7 +22,6 @@ void run(){
     if(n < ind_inicial || n < n_final || n<=0)stat*=0;
 
     if(stat==1){
-
         f_states = new int[n_final];
 
         for (int i=0;i<n_final;i++) cin >> f_states[i];
@@ -40,8 +38,30 @@ void run(){
             else break;
         }
         if(stat2==1){
-            afd.run_DEC();
+            auto t1 = std::chrono::high_resolution_clock::now();
+            afd.run_MIN();
+            //afd.run_DEC();
+            //afd.run_CAD();
+            auto t2 = std::chrono::high_resolution_clock::now();
+            std::cout << "took "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+                      << "milliseconds\n";
+            t1 = std::chrono::high_resolution_clock::now();
             //afd.run_MIN();
+            afd.run_DEC();
+            //afd.run_CAD();
+            t2 = std::chrono::high_resolution_clock::now();
+            std::cout << "took "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+                      << "milliseconds\n";
+            t1 = std::chrono::high_resolution_clock::now();
+            //afd.run_MIN();
+            //afd.run_DEC();
+            afd.run_CAD();
+            t2 = std::chrono::high_resolution_clock::now();
+            std::cout << "f() took "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+                      << " milliseconds\n";
             return;
         }
     }

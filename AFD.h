@@ -10,9 +10,11 @@
 class AFD{
 private:
     int n_states; // Se guarda el numero de estados
-    state** array; // Se guardan los estados
-    int s_inicial; // Posicion del estado inicial
-    int* a_final; // Array de posiciones con los estados finales
+    vector<int> states;
+    vector<int> zero;
+    vector<int> one;
+    int state_inicial; // Posicion del estado inicial
+    int* states_finals; // Array de posiciones con los estados finales
 public:
     AFD(int n, int ind_inicial, int n_final, int* f_array);
     void crear_conecction(int base,int conection,int final); // Crea las conexiones del automata
@@ -21,8 +23,13 @@ public:
     pair<vector<int>, string> hallar_1(pair<vector<int>, string> STR); // Retorna el camino al que el automata va con uno
     void run_MIN(); // Trabaja con el MINSINC y hace el cout
     void run_DEC();
+    void run_CAD();
     bool MINSINC(pair<vector<int>, string> actual, string &cadena); // Halla si la cedena es sincronizable
     bool DECSINC();
+
+    unordered_map<string, pair<string, int>> PRE_CAD();
+    vector<int> find_new(string str_, vector<int> vec_);
+    string CADSINC();
     bool singleton_or_visited(unordered_map<string, bool> visited);
 };
 
