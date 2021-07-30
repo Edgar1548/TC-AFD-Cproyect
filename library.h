@@ -13,7 +13,10 @@
 #include <set>
 #include <chrono>
 #include <unordered_map>
-
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
 using namespace std;
 
 #endif //AFD_PROYECT_LIBRARY_H
