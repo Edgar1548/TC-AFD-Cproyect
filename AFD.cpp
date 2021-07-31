@@ -2,6 +2,7 @@
 // Created by EDGAR on 10/06/2021.
 //
 #include "AFD.h"
+
     AFD::AFD(int number_states, int ind_inicial, int number_final, int *f_states) { // Guarda los atributos del AFD
         states_finals = new int[number_final];
         states.reserve(number_states);
@@ -26,15 +27,13 @@
     }
 
     void AFD::crear_conecction(int base, int conection, int final) { // Crea conexiones
-        if (conection == 0) zero[base] = states[final]; //
-        else if (conection==1) one[base] = states[final];
-        else cout << "Alphabet is only 0 or 1";
+        if (conection == 0) zero[base] = states[final];
+        else one[base] = states[final];
     }
+
     pair<vector<int>, string> AFD::hallar_0(pair<vector<int>, string> STR){
-        priority_queue<int> pq; // Para guardarlo de forma ordenada (en este caso sera de mayor a menor)
         string cadena; // Donde se guarda el nombre del estado al que el estado actual va con 0
         vector<int> vec; // Para verificar que los estados no se repitan
-        unordered_map<int, bool> map; // Donde se guardara el vector del estado al que el estado actual va con 0
         set<int> myset;
         for (int i : STR.first){  // Recorremos el vector con el estado actual
             int it = zero[i];
@@ -45,15 +44,11 @@
             vec.push_back(it);
             cadena += to_string(it) + " "; //Se agrego " " para manejar el error
         }
-        pair<vector<int>,string>pair_; // Guardamos en un pair
-        pair_ = {vec, cadena};
-        return pair_;
+        return {vec, cadena};
     }
 
     pair<vector<int>, string> AFD::hallar_1(pair<vector<int>, string> STR){
-        priority_queue<int> pq; // Para guardarlo de forma ordenada (en este caso sera de mayor a menor)
         string cadena; // Donde se guarda el nombre del estado al que el estado actual va con 1
-        unordered_map<int, bool> map; // Para verificar que los estados no se repitan
         vector<int> vec; // Donde se guardara el vector del estado al que el estado actual va con 1
         set<int> myset;
         for (int i : STR.first){  // Recorremos el vector con el estado actual
@@ -65,27 +60,9 @@
             vec.push_back(it);
             cadena += to_string(it) + " "; //Se agrego " " para manejar el error
         }
-        pair<vector<int>,string>pair_; // Guardamos en un pair
-        pair_ = {vec, cadena};
-        return pair_;
+        return {vec, cadena};
     }
-    void AFD::run_MIN() {
-        string cadena; // Cadena que se mostrara si es que se haya
-        string sup; // cadena que se guardara en el pair para pasarlo a la funcion MINSINC, representa al estado
-        // con todos los estados unitario
-        // con todos los estados unitario
-        pair<vector<int>,string> pair_; // Representa al estado con todos los estados unitario
-        for(int i=0; i<n_states; i++){ //Recorremos el array con estados unitarios
-            sup += to_string(states[i]) + " "; // Se agrego " " para arreglar el error
-        }
-        pair_ = {states, sup}; // Guardamos
-        if (MINSINC(pair_, cadena)){ // Si MINSINC retorna verdad es sincronizable, caso contrario no
-            cout << "si es sincronizable"<<endl;
-            cout << "tamanio_cadena: " << cadena.size()<<endl;
-            cout << "cadena: " << cadena<<endl;
-        }
-        else cout << "NO" << endl;
-    }
+
     bool AFD::MINSINC(pair<vector<int>, string> actual, string &cadena){
 
         if (actual.first.size() == 1){
@@ -133,42 +110,7 @@
         if (state_que.empty()) return false; // Si es vacio el queue, habra recorrido el automata potencia
 
         cadena = fathers_map[actual.second];
-        return true;
-    }
-    bool AFD::DECSINC2() {
-        if (n_states == 1 || n_states == 0) return true;
-        pair<vector<int>, string> pair_;
-        pair<vector<int>, string> zero_;
-        pair<vector<int>, string> one_;
-        for (int i=0; i<n_states; i++){
-            for (int j=i+1; j<n_states; j++){
-                unordered_map<string, bool> visited;
-                queue<pair<vector<int>, string>> stack_states;
-                if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
-                else pair_.second = to_string(j) + " " +to_string(i) + " ";
-                pair_.first = {i, j};
-                stack_states.push(pair_);
-                while(!stack_states.empty()){
-                    pair_ = stack_states.front();
-                    zero_ = hallar_0(pair_);
-                    visited[pair_.second] = true;
-                    if ( zero_.first.size() == 1 ) break;
-                    else if (!visited[zero_.second]) {
-                        visited[zero_.second] = true;
-                        stack_states.push(zero_);
-                    }
-                    one_ = hallar_1(pair_);
-                    if ( one_.first.size() == 1)break;
 
-                    else if (!visited[one_.second]) {
-                        visited[one_.second] = true;
-                        stack_states.push(one_);
-                    }
-                    stack_states.pop();
-                    if (stack_states.empty()) return false;
-                }
-            }
-        }
         return true;
     }
 
@@ -183,16 +125,15 @@
         int count = 0;
         for (int i=0; i<n_states; i++){
             for (int j=i+1; j<n_states; j++){
-                unordered_map<string, bool> visited;
-                if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
-                else pair_.second = to_string(j) + " " +to_string(i) + " ";
+                pair_.second = to_string(i) + " " +to_string(j) + " ";
                 if (trues_[pair_.second]) continue;
+                unordered_map<string, bool> visited_parcial;
                 pair_.first = {i, j};
                 stack_states.push(pair_);
-                while(!stack_states.empty()){
+                do{
                     pair_ = stack_states.top();
                     zero_ = hallar_0(pair_);
-                    visited[pair_.second] = true;
+                    visited_parcial[pair_.second] = true;
                     if (trues_[zero_.second] || zero_.first.size() == 1 ){
                         while (!stack_states.empty()){
                             count ++;
@@ -212,165 +153,133 @@
                         if (count == limit) return true;
                         break;
                     }
-                    else if (!visited[zero_.second]) stack_states.push(zero_);
-                    else if (!visited[one_.second]) stack_states.push(one_);
-                    else stack_states.pop();
-                    if (stack_states.empty()) return false;
-                }
+                    else if (!visited_parcial[zero_.second]) stack_states.push(zero_);
+                    else if (!visited_parcial[one_.second]) stack_states.push(one_);
+                    else {
+                        stack_states.pop();
+                        if (stack_states.empty()) return false;
+                    }
+                }while(!stack_states.empty());
                 if (count == limit) return true;
             }
         }
         return true;
     }
-    unordered_map<string, pair<string, int>> AFD::PRE_CAD() {
-        unordered_map<string, bool> trues_;
-        pair<vector<int>, string> pair_;
-        pair<vector<int>, string> zero_;
-        pair<vector<int>, string> one_;
-        unordered_map<string, pair<string, int>> strings_;
-        unordered_map<string, string> fathers_;
-        string chain;
-        stack<pair<pair<vector<int>, string>, string>> stack_states;
-        int count = 0;
-        for (int i=0; i<n_states; i++){
-            for (int j=i+1; j<n_states; j++){
-                unordered_map<string, bool> visited;
-                if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
-                else pair_.second = to_string(j) + " " +to_string(i) + " ";
-                chain = "";
-                if (trues_[pair_.second]) continue;
-                pair_.first = {i, j};
-                stack_states.push({pair_, chain});
-                while(!stack_states.empty()){
-                    one_ = hallar_1(pair_);
-                    visited[pair_.second] = true;
-                    if (trues_[one_.second]){
-                        chain = "1" + strings_[one_.second].first;
-                        while (!stack_states.empty()){
-                            count++;
-                            strings_[stack_states.top().first.second] = {chain, strings_[one_.second].second};
-                            chain += stack_states.top().second;
-                            trues_[stack_states.top().first.second] = true;
-                            stack_states.pop();
-                        }
-                        break;
-                    }
-                    else if (one_.first.size() == 1){
-                        chain = "1";
-                        while (!stack_states.empty()){
-                            count ++;
-                            strings_[stack_states.top().first.second] = {chain, stoi(one_.second)};
-                            chain += stack_states.top().second;
-                            trues_[stack_states.top().first.second] = true;
-                            stack_states.pop();
-                        }
-                        break;
-                    }
-                    else if (!visited[one_.second]) {
-                        stack_states.push({one_, "1"});
-                    }
-                    else {
-                        zero_ = hallar_0(pair_);
-                        if (trues_[zero_.second]) {
-                            chain = "0" + strings_[zero_.second].first;
-                            while (!stack_states.empty()) {
-                                count++;
-                                strings_[stack_states.top().first.second] = {chain, strings_[zero_.second].second};
-                                chain += stack_states.top().second;
-                                trues_[stack_states.top().first.second] = true;
-                                stack_states.pop();
-                            }
-                            break;
-                        }
-                        if (zero_.first.size() == 1) {
-                            chain = "0";
-                            while (!stack_states.empty()) {
-                                count++;
-                                strings_[stack_states.top().first.second] = {chain, stoi(zero_.second)};
-                                chain += stack_states.top().second;
-                                trues_[stack_states.top().first.second] = true;
-                                stack_states.pop();
-                            }
-                            break;
-                        } else if (!visited[zero_.second]) {
-                            stack_states.push({zero_, "0"});
-                        } else stack_states.pop();
-                    }
-                    pair_ = stack_states.top().first;
-                }
-                if (count == (n_states*(n_states-1))/2) break;
-            }
-            if (count == (n_states*(n_states-1))/2) break;
-        }
 
-        fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
-        string line;
-        if (f.is_open()) {
-            for (const auto& it: strings_) {
-                line = it.first + it.second.first;
-                //cout << it.second.first << endl;
-                for(int i=0; line[i] != '\0'; i++ )
-                    f.put(line[i]);
-                f.put('\n');
-            }
-            f.close();
-        }
-        return strings_;
-    }
-    unordered_map<string, pair<string, int>> AFD::PRE_CAD2() {
-        pair<vector<int>, string> pair_;
-        pair<vector<int>, string> zero_;
-        pair<vector<int>, string> one_;
-        unordered_map<string, pair<string, int>> strings_;
-        for (int i=0; i<n_states; i++){
-            for (int j=i+1; j<n_states; j++){
-                queue<pair<pair<vector<int>, string>, string>> queue_states;
-                unordered_map<string, bool> visited;
-                if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
-                else pair_.second = to_string(j) + " " +to_string(i) + " ";
-                pair_.first = {i, j};
-                string actual = pair_.second;
-                queue_states.push({pair_, ""});
-                while(!queue_states.empty()){
-                    pair_ = queue_states.front().first;
-                    zero_ = hallar_0(pair_);
-                    visited[pair_.second] = true;
-                    if (zero_.first.size() == 1){
-                        strings_[actual] = {queue_states.front().second + "0", stoi(zero_.second)};
-                        break;
+    unordered_map<string, pair<string, int>> AFD::PRE_CAD(){
+    int limit = (n_states*(n_states-1))/2;
+    unordered_map<string, bool> SINC;
+    unordered_map<string, pair<string, int>> strings_;
+    pair<vector<int>, string> pair_;
+    pair<vector<int>, string> zero_;
+    pair<vector<int>, string> one_;
+    unordered_map<string, pair<string, string>> fathers_;
+    string chain;
+    int count = 0;
+    for (int i=0; i<n_states; i++){
+        for (int j=i+1; j<n_states; j++){
+            if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
+            else pair_.second = to_string(j) + " " +to_string(i) + " ";
+            if (SINC[pair_.second]) continue;
+            unordered_map<string, bool> visited;
+            queue<pair<vector<int>, string>> queue_states;
+            pair_.first = {i, j};
+            queue_states.push(pair_);
+            visited[pair_.second] = true;
+            chain = "";
+            fathers_[pair_.second] = {pair_.second, ""};
+            do{
+                pair_ = queue_states.front();
+                zero_ = hallar_0(pair_);
+                if (zero_.first.size() == 1){
+                    chain = "0";
+                    while (fathers_[pair_.second].first != pair_.second){
+                        count++;
+                        strings_[pair_.second] = {chain, zero_.first[0]};
+                        chain = fathers_[pair_.second].second + chain;
+                        SINC[pair_.second] = true;
+                        pair_.second = fathers_[pair_.second].first;
                     }
-                    one_ = hallar_1(pair_);
-                    if (one_.first.size() == 1){
-                        strings_[actual] = {queue_states.front().second + "1", stoi(one_.second)};
-                        break;
-                    }
-                    if (!visited[zero_.second]) {
-                        visited[zero_.second] = true;
-                        queue_states.push({zero_, queue_states.front().second + "0"});
-                    }
-                    if (!visited[one_.second]) {
-                        visited[one_.second] = true;
-                        queue_states.push({one_, queue_states.front().second + "1"});
-                    }
-                    queue_states.pop();
+                    count++;
+                    strings_[pair_.second] = {chain, zero_.first[0]};
+                    SINC[pair_.second] = true;
+                    break;
                 }
-            }
+                if (SINC[zero_.second]){
+                    chain = "0" + strings_[zero_.second].first;
+                    while (fathers_[pair_.second].first != pair_.second){
+                        count++;
+                        strings_[pair_.second] = {chain, strings_[zero_.second].second};
+                        chain = fathers_[pair_.second].second + chain;
+                        SINC[pair_.second] = true;
+                        pair_.second = fathers_[pair_.second].first;
+                    }
+                    count++;
+                    strings_[pair_.second] = {chain, strings_[zero_.second].second};
+                    SINC[pair_.second] = true;
+                    break;
+                }
+                one_ = hallar_1(pair_);
+                if (one_.first.size() == 1){
+                    chain = "1";
+                    while (fathers_[pair_.second].first != pair_.second){
+                        count++;
+                        strings_[pair_.second] = {chain, one_.first[0]};
+                        chain = fathers_[pair_.second].second + chain;
+                        SINC[pair_.second] = true;
+                        pair_.second = fathers_[pair_.second].first;
+                    }
+                    count++;
+                    strings_[pair_.second] = {chain, one_.first[0]};
+                    SINC[pair_.second] = true;
+                    break;
+                }
+                if (SINC[one_.second]){
+                    chain = "1" + strings_[one_.second].first;
+                    while (fathers_[pair_.second].first != pair_.second){
+                        count++;
+                        strings_[pair_.second] = {chain, strings_[one_.second].second};
+                        chain = fathers_[pair_.second].second + chain;
+                        SINC[pair_.second] = true;
+                        pair_.second = fathers_[pair_.second].first;
+                    }
+                    count++;
+                    strings_[pair_.second] = {chain, strings_[one_.second].second};
+                    SINC[pair_.second] = true;
+                    break;
+                }
+                if (!visited[zero_.second]) {
+                    fathers_[zero_.second] = {pair_.second, "0"};
+                    visited[zero_.second] = true;
+                    queue_states.push(zero_);
+                }
+                if (!visited[one_.second]) {
+                    fathers_[one_.second] = {pair_.second, "1"};
+                    visited[one_.second] = true;
+                    queue_states.push(one_);
+                }
+                queue_states.pop();
+            }while(!queue_states.empty());
+            if (count == limit) return strings_;
         }
-
-        fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
-        string line;
-        if (f.is_open()) {
-            for (const auto& it: strings_) {
-                line = it.first + it.second.first;
-                //cout << it.second.first << endl;
-                for(int i=0; line[i] != '\0'; i++ )
-                    f.put(line[i]);
-                f.put('\n');
-            }
-            f.close();
-        }
-        return strings_;
     }
+    /*
+    fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
+    string line;
+    if (f.is_open()) {
+        for (const auto& it: strings_) {
+            line = it.first + it.second.first;
+            //cout << it.second.first << endl;
+            for(int i=0; line[i] != '\0'; i++ )
+                f.put(line[i]);
+            f.put('\n');
+        }
+        f.close();
+    }
+     */
+    return strings_;
+}
+
     vector<int> AFD::find_new(string str_, vector<int> vec_, int add){
         int element ;
         set<int> myset;
@@ -405,44 +314,56 @@
         while(X.size() > 1){
             if (X.size() == 2) {
                 if (X[0] > X[1]) swap(X[0], X[1]);
-                //cout << X[0];
-                string try_ = to_string(X[0]) + " " + to_string(X[1]) + " ";
-                T += T_[try_].first;
-                //cout << T_[try_].first << endl;
-                //cout << T_[try_].second << endl;
+                T += T_[to_string(X[0]) + " " + to_string(X[1]) + " "].first;
                 break;
             }
             else {
                 string try_ = to_string(X[0]) + " " + to_string(X[1]) + " ";
-                tmp = find_new(T_[try_].first, X, T_[try_].second);
-                X = tmp;
+                X = find_new(T_[try_].first, X, T_[try_].second);
                 T += T_[try_].first;
             }
         }
         return T;
     }
+
+    void AFD::run_MIN() {
+        string cadena; // Cadena que se mostrara si es que se haya
+        string sup; // cadena que se guardara en el pair para pasarlo a la funcion MINSINC, representa al estado
+        pair<vector<int>,string> pair_; // Representa al estado con todos los estados unitario
+        for(int i=0; i<n_states; i++){ //Recorremos el array con estados unitarios
+            sup += to_string(states[i]) + " "; // Se agrego " " para arreglar el error
+        }
+        pair_ = {states, sup}; // Guardamos
+        if (MINSINC(pair_, cadena)){ // Si MINSINC retorna verdad es sincronizable, caso contrario no
+            cout << "si es sincronizable"<<endl;
+            cout << "tamanio_cadena: " << cadena.size()<<endl;
+            cout << "cadena: " << cadena<<endl;
+        }
+        else cout << "NO" << endl;
+    }
+
     void AFD::run_DEC() {
         if (DECSINC()) cout << "SI" << endl;
         else cout << "NO" << endl;
     }
+
     void AFD::run_CAD() {
         string a = CADSINC();
         cout << a << endl;
     }
+
     void AFD::run_magical(){
-        if (DECSINC2()) {
+        if (DECSINC()) {
             string str_ = CADSINC();
             for (char & it : str_){
                 if (it - '0' == 0) cout << "W";
                 else cout << "B";
             }
-            //cout << endl;
-            //cout << str_ << endl;
-            //cout << str_.size() << endl;
             return;
         }
         cout << "impossible" ;
     }
+
     void AFD::validar_cadenas(int indice1, int indice2, const string& recorr) {
         for (auto itr: recorr) {
             if (itr - '0' == 0) {
@@ -453,17 +374,14 @@
                 indice2 = one[indice2];
             }
         }
-        cout << indice1 <<" " <<indice2 << endl;
+        cout << indice1 <<"-" <<indice2 << endl;
     }
+
     void AFD::validar_cadena(string comp_, int indice1){
         int actual;
-        int actual2;
-        int indice2 = 9;
         vector<int> vec;
         set<int> set_;
         actual = indice1;
-        actual2 = indice2;
-        cout << "ga"<<endl;
         for (auto itr: comp_) {
             if (itr - '0' == 0 || itr == 'W' || itr-'0'=='W') {
                 actual = zero[actual];
@@ -484,10 +402,7 @@
             vec.push_back(actual);
             set_.insert(actual);
         }
-        int poss = 0;
-        //for (auto it: vec) cout<<poss++ <<"-" << it << " ";
-        //cout << endl;
-        for (auto it: set_) cout<<poss++ <<"-" << it << " ";
+        for (auto it: set_) cout<< it << " ";
         cout << endl;
     }
 
@@ -522,6 +437,94 @@
             cout << one_[i]+1 << " ";
     }
 
+    bool AFD::DECSINC2() {
+    if (n_states == 1 || n_states == 0) return true;
+    pair<vector<int>, string> pair_;
+    pair<vector<int>, string> zero_;
+    pair<vector<int>, string> one_;
+    for (int i=0; i<n_states; i++){
+        for (int j=i+1; j<n_states; j++){
+            unordered_map<string, bool> visited;
+            queue<pair<vector<int>, string>> stack_states;
+            if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
+            else pair_.second = to_string(j) + " " +to_string(i) + " ";
+            pair_.first = {i, j};
+            stack_states.push(pair_);
+            while(!stack_states.empty()){
+                pair_ = stack_states.front();
+                zero_ = hallar_0(pair_);
+                visited[pair_.second] = true;
+                if ( zero_.first.size() == 1 ) break;
+                else if (!visited[zero_.second]) {
+                    visited[zero_.second] = true;
+                    stack_states.push(zero_);
+                }
+                one_ = hallar_1(pair_);
+                if ( one_.first.size() == 1)break;
 
+                else if (!visited[one_.second]) {
+                    visited[one_.second] = true;
+                    stack_states.push(one_);
+                }
+                stack_states.pop();
+                if (stack_states.empty()) return false;
+            }
+        }
+    }
+    return true;
+}
 
+    unordered_map<string, pair<string, int>> AFD::PRE_CAD2() {
+    pair<vector<int>, string> pair_;
+    pair<vector<int>, string> zero_;
+    pair<vector<int>, string> one_;
+    unordered_map<string, pair<string, int>> strings_;
+    for (int i=0; i<n_states; i++){
+        for (int j=i+1; j<n_states; j++){
+            queue<pair<pair<vector<int>, string>, string>> queue_states;
+            unordered_map<string, bool> visited;
+            if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
+            else pair_.second = to_string(j) + " " +to_string(i) + " ";
+            pair_.first = {i, j};
+            string actual = pair_.second;
+            queue_states.push({pair_, ""});
+            while(!queue_states.empty()){
+                pair_ = queue_states.front().first;
+                zero_ = hallar_0(pair_);
+                visited[pair_.second] = true;
+                if (zero_.first.size() == 1){
+                    strings_[actual] = {queue_states.front().second + "0", stoi(zero_.second)};
+                    break;
+                }
+                one_ = hallar_1(pair_);
+                if (one_.first.size() == 1){
+                    strings_[actual] = {queue_states.front().second + "1", stoi(one_.second)};
+                    break;
+                }
+                if (!visited[zero_.second]) {
+                    visited[zero_.second] = true;
+                    queue_states.push({zero_, queue_states.front().second + "0"});
+                }
+                if (!visited[one_.second]) {
+                    visited[one_.second] = true;
+                    queue_states.push({one_, queue_states.front().second + "1"});
+                }
+                queue_states.pop();
+            }
+        }
+    }
 
+    fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
+    string line;
+    if (f.is_open()) {
+        for (const auto& it: strings_) {
+            line = it.first + it.second.first;
+            //cout << it.second.first << endl;
+            for(int i=0; line[i] != '\0'; i++ )
+                f.put(line[i]);
+            f.put('\n');
+        }
+        f.close();
+    }
+    return strings_;
+}

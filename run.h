@@ -53,30 +53,24 @@ void run(){
     }
     auto t1 = std::chrono::high_resolution_clock::now();
     //afd->run_MIN();
-    //afd.run_DEC();
-    //afd.run_CAD();
     auto t2 = std::chrono::high_resolution_clock::now();
     cout << "took "
             << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
             << "milliseconds\n";
     t1 = std::chrono::high_resolution_clock::now();
-    //afd->run_MIN();
-    //afd.run_DEC();
-    //afd.run_CAD();
+    //afd->run_DEC();
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << "took "
             << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
             << "milliseconds\n";
     t1 = std::chrono::high_resolution_clock::now();
-    //afd.run_MIN();
-    //afd.run_DEC();
     //if (afd.DECSINC()) afd.run_CAD();
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << "f() took "
             << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
             << " milliseconds\n";
     //test_cadenas(afd);
-    test_cadena(afd);
+    //test_cadena(afd);
 }
 
 #endif //AFD_PROYECT_RUN_H
