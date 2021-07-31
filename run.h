@@ -53,7 +53,7 @@ void run(){
     }
     auto t1 = std::chrono::high_resolution_clock::now();
     //afd->run_MIN();
-    afd->run_DEC(); // n^2
+    //afd->run_DEC(); // n^2
     //afd->run_CAD();  // n^3
     auto t2 = std::chrono::high_resolution_clock::now();
     cout << "took "

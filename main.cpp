@@ -7,6 +7,6 @@ int main(){
     srand (time(NULL));
     //run();
     //run_magic();
-    //run_new_atuomata();
+    run_new_atuomata();
     return 0;
 }

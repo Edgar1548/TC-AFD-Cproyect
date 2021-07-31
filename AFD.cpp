@@ -409,45 +409,37 @@
     }
 
     void AFD::create_aleatorio(int N){
-        fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
-        string line;
-        if (f.is_open()) {
+        ofstream outfile;
+        outfile.open("D:/Documentos/C_Poo/AFD-Proyect/try1.txt");
+        if (outfile.is_open()){
             int element;
             vector<int> zero_;
             vector<int> one_;
-            cout << N << " ";
-            cout << rand() % (N-1) + 0 << " ";
+            outfile << N << " ";
+            outfile << rand() % (N-1) + 0 << " ";
             int end = 1;
-            cout << end << " ";
-            for (int i=0; i<end; i++){
-                cout << rand() % (N-1) + 0 << " ";
-            }
-            cout << endl;
+            outfile << end << " ";
+            for (int i=0;i<end; i++)
+                outfile << rand() % (N-1) + 0 << " ";
+            outfile << endl;
             for (int i=0; i<N; i++){
                 for (int j=0; j<2; j++){
                     element = rand()%(N-1) +0;
                     if (j==0) zero_.push_back(element);
                     else one_.push_back(element);
-                    cout << i << " ";
-                    cout << j << " ";
-                    cout << element << " " << endl;
+                    outfile << i << " ";
+                    outfile << j << " ";
+                    outfile << element << " " << endl;
                 }
             }
-            cout << "MAGICAL FORM:" << endl;
-            cout << N << endl;
+            outfile << "MAGICAL FORM:" << endl;
+            outfile << N << endl;
             for (int i=0; i<N; i++)
-                cout << zero_[i]+1 << " ";
-            cout << endl;
+                outfile << zero_[i] + 1 << " ";
+            outfile << endl;
             for (int i=0; i<N; i++)
-                cout << one_[i]+1 << " ";
-            for (const auto& it: strings_) {
-                line = it.first + it.second.first;
-                //cout << it.second.first << endl;
-                for(int i=0; line[i] != '\0'; i++ )
-                    f.put(line[i]);
-                f.put('\n');
-            }
-            f.close();
+                outfile << one_[i] + 1 << " ";
+            outfile << endl;
         }
     }
 
@@ -530,7 +522,7 @@
 
     fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
     string line;
-    if (f.is_open()) {
+    if (f.is_open()){
         for (const auto& it: strings_) {
             line = it.first + it.second.first;
             //cout << it.second.first << endl;
