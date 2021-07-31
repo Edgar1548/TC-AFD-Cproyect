@@ -364,6 +364,8 @@
         cout << "impossible" ;
     }
 
+    //// AÑADIDO PARA VERIFICAR
+
     void AFD::validar_cadenas(int indice1, int indice2, const string& recorr) {
         for (auto itr: recorr) {
             if (itr - '0' == 0) {
