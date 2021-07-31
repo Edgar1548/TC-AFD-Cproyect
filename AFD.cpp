@@ -409,34 +409,46 @@
     }
 
     void AFD::create_aleatorio(int N){
-        int element;
-        vector<int> zero_;
-        vector<int> one_;
-        cout << N << " ";
-        cout << rand() % (N-1) + 0 << " ";
-        int end = 1;
-        cout << end << " ";
-        for (int i=0; i<end; i++){
+        fstream f("D:/Documentos/C_Poo/AFD-Proyect/try.txt", ios::out);
+        string line;
+        if (f.is_open()) {
+            int element;
+            vector<int> zero_;
+            vector<int> one_;
+            cout << N << " ";
             cout << rand() % (N-1) + 0 << " ";
-        }
-        cout << endl;
-        for (int i=0; i<N; i++){
-            for (int j=0; j<2; j++){
-                element = rand()%(N-1) +0;
-                if (j==0) zero_.push_back(element);
-                else one_.push_back(element);
-                cout << i << " ";
-                cout << j << " ";
-                cout << element << " " << endl;
+            int end = 1;
+            cout << end << " ";
+            for (int i=0; i<end; i++){
+                cout << rand() % (N-1) + 0 << " ";
             }
+            cout << endl;
+            for (int i=0; i<N; i++){
+                for (int j=0; j<2; j++){
+                    element = rand()%(N-1) +0;
+                    if (j==0) zero_.push_back(element);
+                    else one_.push_back(element);
+                    cout << i << " ";
+                    cout << j << " ";
+                    cout << element << " " << endl;
+                }
+            }
+            cout << "MAGICAL FORM:" << endl;
+            cout << N << endl;
+            for (int i=0; i<N; i++)
+                cout << zero_[i]+1 << " ";
+            cout << endl;
+            for (int i=0; i<N; i++)
+                cout << one_[i]+1 << " ";
+            for (const auto& it: strings_) {
+                line = it.first + it.second.first;
+                //cout << it.second.first << endl;
+                for(int i=0; line[i] != '\0'; i++ )
+                    f.put(line[i]);
+                f.put('\n');
+            }
+            f.close();
         }
-        cout << "MAGICAL FORM:" << endl;
-        cout << N << endl;
-        for (int i=0; i<N; i++)
-            cout << zero_[i]+1 << " ";
-        cout << endl;
-        for (int i=0; i<N; i++)
-            cout << one_[i]+1 << " ";
     }
 
     bool AFD::DECSINC2() {
