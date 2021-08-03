@@ -5,8 +5,8 @@
 #include "run_magical.h"
 int main(){
     srand (time(NULL));
-    //run();
+    run();
     //run_magic();
-    run_new_atuomata();
+    //run_new_atuomata();
     return 0;
 }

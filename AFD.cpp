@@ -117,45 +117,50 @@
     bool AFD::DECSINC() {
         if (n_states == 1 || n_states == 0) return true;
         int limit = (n_states*(n_states-1))/2;
-        unordered_map<string, bool> trues_;
+        unordered_map<string, bool> SINC_;
         pair<vector<int>, string> pair_;
         pair<vector<int>, string> zero_;
         pair<vector<int>, string> one_;
-        stack<pair<vector<int>, string>> stack_states;
+        bool visited_zero;
+        bool visited_one;
+        bool SINC_zero;
+        bool SINC_one;
         int count = 0;
         for (int i=0; i<n_states; i++){
             for (int j=i+1; j<n_states; j++){
                 pair_.second = to_string(i) + " " +to_string(j) + " ";
-                if (trues_[pair_.second]) continue;
+                if (SINC_[pair_.second]) continue;
+                stack<pair<vector<int>, string>> stack_states;
                 unordered_map<string, bool> visited_parcial;
                 pair_.first = {i, j};
+                SINC_[pair_.second] = true;
+                count++;
                 stack_states.push(pair_);
+                visited_parcial[pair_.second] = true;
                 do{
                     pair_ = stack_states.top();
                     zero_ = hallar_0(pair_);
-                    visited_parcial[pair_.second] = true;
-                    if (trues_[zero_.second] || zero_.first.size() == 1 ){
-                        while (!stack_states.empty()){
-                            count ++;
-                            trues_[stack_states.top().second] = true;
-                            stack_states.pop();
-                        }
-                        if (count == limit) return true;
-                        break;
-                    }
+                    visited_zero = visited_parcial[zero_.second];
+                    SINC_zero = SINC_[zero_.second];
+                    if ( zero_.first.size() == 1 || (SINC_zero && !visited_zero) ) break;
                     one_ = hallar_1(pair_);
-                    if (one_.first.size() == 1 || trues_[one_.second]){
-                        while (!stack_states.empty()){
-                            count ++;
-                            trues_[stack_states.top().second] = true;
-                            stack_states.pop();
-                        }
-                        if (count == limit) return true;
-                        break;
+                    visited_one = visited_parcial[one_.second];
+                    SINC_one = SINC_[one_.second];
+                    if ( one_.first.size() == 1  || (SINC_one && !visited_one )) break;
+                    else if (!visited_zero) {
+                        count ++;
+                        visited_parcial[zero_.second] = true;
+                        stack_states.push(zero_);
+                        SINC_[zero_.second] = true;
                     }
-                    else if (!visited_parcial[zero_.second]) stack_states.push(zero_);
-                    else if (!visited_parcial[one_.second]) stack_states.push(one_);
+                    else if (!visited_one) {
+                        count ++;
+                        visited_parcial[one_.second] = true;
+                        stack_states.push(one_);
+                        SINC_[one_.second] = true;
+                    }
                     else {
+                        if (!SINC_zero && !SINC_one) return false;
                         stack_states.pop();
                         if (stack_states.empty()) return false;
                     }
