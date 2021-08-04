@@ -51,14 +51,14 @@ void run(){
         cin >> qini >> caracter >> qfin;
         afd->crear_conecction(qini, caracter, qfin);
     }
-    auto t1 = std::chrono::high_resolution_clock::now();
-    afd->run_MIN();
+    //auto t1 = std::chrono::high_resolution_clock::now();
+    //afd->run_MIN();
     //afd->run_DEC(); // n^2
-    //afd->run_CAD();  // n^3
-    auto t2 = std::chrono::high_resolution_clock::now();
-    cout << "took "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-           << " milliseconds\n";
+    afd->run_CAD();  // n^3
+    //auto t2 = std::chrono::high_resolution_clock::now();
+    //cout << "took "
+    //        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+    //       << " milliseconds\n";
     //test_cadenas(afd);
     //test_cadena(afd);
 }

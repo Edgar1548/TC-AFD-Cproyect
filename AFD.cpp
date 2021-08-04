@@ -116,7 +116,7 @@
     bool AFD::DECSINC() {
         if (n_states == 1 || n_states == 0) return true;
         int limit = (n_states*(n_states-1))/2;
-        unordered_map<string, bool> SINC_;
+        unordered_map<string, bool> SINC_; // Guarda pares sincronizables
         pair<vector<int>, string> pair_;
         pair<vector<int>, string> zero_;
         pair<vector<int>, string> one_;
@@ -124,7 +124,7 @@
         bool visited_one;
         bool SINC_zero;
         bool SINC_one;
-        int count = 0;
+        int count = 0; // Guarda cantidad de pares sincronizables
         for (int i=0; i<n_states; i++){
             for (int j=i+1; j<n_states; j++){
                 pair_.second = to_string(i) + " " +to_string(j) + " ";
