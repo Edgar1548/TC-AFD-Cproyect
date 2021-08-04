@@ -1,6 +1,6 @@
 # AFD-Proyect
 Proyecto de teoría de la computación
-INTEGRANTES:
+##INTEGRANTES:
 
  - Chacon Arrospide, Edgar Santos
 
