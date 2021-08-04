@@ -64,7 +64,6 @@
     }
 
     bool AFD::MINSINC(pair<vector<int>, string> actual, string &cadena){
-        cout << "ga"<<endl;
         if (actual.first.size() == 1){
             cadena = "0";
             return true;
@@ -87,7 +86,7 @@
                 actual.second = state_0.second;
                 break;
             }
-            if(visiteds_map.find(state_0.second) == visiteds_map.end()) { //Verifica state_que el camino por 0 no haya sido recorrido
+            if(!visiteds_map[state_0.second]) { //Verifica state_que el camino por 0 no haya sido recorrido
                 fathers_map[state_0.second] = father_+"0";//Guardamos el Padre de state_0  y el camino '0'
                 visiteds_map[state_0.second] = true; //state_0 sera recorrido
                 state_que.push(state_0); // Pusheamos al queue el state_0
@@ -98,7 +97,7 @@
                 actual.second = state_1.second;
                 break;
             }
-            if(visiteds_map.find(state_1.second) == visiteds_map.end()) {
+            if(!visiteds_map[state_1.second]) {
                 fathers_map[state_1.second] = father_+"1"; //Guardamos el Padre de state_1  y el camino '1'
                 visiteds_map[state_1.second] = true; //state_1 sera recorrido
                 state_que.push(state_1); // Pusheamos al queue el state_0
@@ -183,8 +182,7 @@
     int count = 0;
     for (int i=0; i<n_states; i++){
         for (int j=i+1; j<n_states; j++){
-            if (j>i) pair_.second = to_string(i) + " " +to_string(j) + " ";
-            else pair_.second = to_string(j) + " " +to_string(i) + " ";
+            pair_.second = to_string(i) + " " +to_string(j) + " ";
             if (SINC[pair_.second]) continue;
             unordered_map<string, bool> visited;
             queue<pair<vector<int>, string>> queue_states;
