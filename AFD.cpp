@@ -285,7 +285,7 @@
     return strings_;
 }
 
-    vector<int> AFD::find_new(string str_, vector<int> vec_, int add){
+    vector<int> AFD::nuevos_estados(string str_, vector<int> vec_, int add){
         int element ;
         set<int> myset;
         unordered_map<int, bool> verificate;
@@ -324,7 +324,7 @@
             }
             else {
                 string try_ = to_string(X[0]) + " " + to_string(X[1]) + " ";
-                X = find_new(T_[try_].first, X, T_[try_].second);
+                X = nuevos_estados(T_[try_].first, X, T_[try_].second);
                 T += T_[try_].first;
             }
         }

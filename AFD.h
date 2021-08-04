@@ -32,7 +32,7 @@ public:
     void validar_cadenas(int indice1, int indice2, const string& recorr);
     unordered_map<string, pair<string, int>> PRE_CAD();
     unordered_map<string, pair<string, int>> PRE_CAD2();
-    vector<int> find_new(string str_, vector<int> vec_, int add);
+    vector<int> nuevos_estados(string str_, vector<int> vec_, int add);
     string CADSINC();
     void run_magical();
     void validar_cadena(string comp_, int indice=0);
